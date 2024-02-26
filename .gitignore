@@ -40,6 +40,9 @@ out/
 .DS_Store
 
 ## Setting Files ##
+*.yml
+*.yaml
+*.properties
 application.yml
 application.yaml
 application.properties
