@@ -1,4 +1,4 @@
 package com.hormonic.crowd_buying.domain.entity;
 
-public class Admin {
+public class Administrator {
 }
