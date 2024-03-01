@@ -3,20 +3,52 @@ package com.hormonic.crowd_buying.domain.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.Comment;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Table
 @Entity
+@Table
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(nullable = false, columnDefinition = "BINARY(16)")
     @Comment("유저 UUID")
-    private Byte[] userUuid;
+    private UUID userUuid;
+
+    @Column(nullable = false)
+    @Comment("유저 이름")
+    private String userName;
+
+    @Column(nullable = false)
+    @Comment("유저 이메일")
+    private String userEmail;
+
+    @CreationTimestamp
+    @Column(nullable = false)
+    @Comment("생성 날짜")
+    private LocalDateTime createdDate;
+}
+
+/*@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+@Entity
+@Table(name = "user")
+public class User {
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(columnDefinition = "BINARY(16)")
+    @Comment("유저 UUID")
+    private UUID userUuid;
 
     @Column(nullable = false)
     @Comment("유저 ID")
@@ -54,4 +86,4 @@ public class User {
     @Comment("유저 가입일")
     private LocalDateTime userRegdate;
 
-}
+}*/
