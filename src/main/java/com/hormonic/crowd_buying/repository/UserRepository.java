@@ -2,6 +2,7 @@ package com.hormonic.crowd_buying.repository;
 
 import com.hormonic.crowd_buying.domain.entity.User;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -12,10 +13,9 @@ import java.util.UUID;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, UUID> {
+//    List<User> findAll(Specification<User> spec, Pageable pageable);
 
-    List<User> findAll();
-
-    User findByUserName(String userName);
+//    User findByUserName(String userName);
 
     User findByUserEmail(String userEmail);
 
