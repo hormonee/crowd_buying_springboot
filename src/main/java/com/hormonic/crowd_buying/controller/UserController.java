@@ -1,14 +1,16 @@
 package com.hormonic.crowd_buying.controller;
 
+import com.hormonic.crowd_buying.domain.dto.request.SaveUserRequest;
+import com.hormonic.crowd_buying.domain.dto.response.SaveUserResponse;
 import com.hormonic.crowd_buying.domain.entity.User;
 import com.hormonic.crowd_buying.service.user.UserService;
-import lombok.Builder;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -18,12 +20,17 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping
-    public List<User> getUserList() {
-        return userService.getUserList();
+    public ArrayList<User> getUserList() {
+        System.out.println("Controller 진입");
+        ArrayList<User> userList = userService.getUserList();
+        System.out.println(userList);
+        return userList;
     }
 
-    @GetMapping("/name/{name}")
+    @GetMapping("/{name}")
     public User getUserByName(@PathVariable("name") String userName) {
+        System.out.println("Controller 진입");
+        System.out.println(userName);
         return userService.getUserByName(userName);
     }
 
@@ -47,13 +54,9 @@ public class UserController {
         return userService.testCustomizedMethod2(element);
     }
 
-    @PostMapping()
-    public User createUser() {
-        User newUser = User.builder()
-                .userName("kim2")
-                .userEmail("kim2@gmail.com")
-                .build();
-        return userService.createUser(newUser);
+    @PostMapping
+    public ResponseEntity<SaveUserResponse> create(@RequestBody @Valid SaveUserRequest saveUserRequest) {
+        return ResponseEntity.ok(userService.saveUser(saveUserRequest));
     }
 
 }

@@ -1,5 +1,6 @@
 package com.hormonic.crowd_buying.domain.entity;
 
+import com.hormonic.crowd_buying.domain.dto.response.SaveUserResponse;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.Comment;
@@ -9,7 +10,6 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Getter
-@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -17,8 +17,8 @@ import java.util.UUID;
 @Table
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(nullable = false, columnDefinition = "BINARY(16)")
+    @GeneratedValue(generator = "uuid2")
+    @Column(columnDefinition = "BINARY(16)", nullable = false)
     @Comment("유저 UUID")
     private UUID userUuid;
 
@@ -34,6 +34,17 @@ public class User {
     @Column(nullable = false)
     @Comment("생성 날짜")
     private LocalDateTime createdDate;
+
+    public User(String userName, String userEmail) {
+        this.userName = userName;
+        this.userEmail = userEmail;
+    }
+
+    public SaveUserResponse toSaveUserResponse() {
+        return SaveUserResponse.builder()
+                .userName(this.getUserName())
+                .build();
+    }
 }
 
 /*@Getter
