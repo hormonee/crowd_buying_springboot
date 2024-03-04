@@ -8,8 +8,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class HomeController {
 
     @GetMapping("/")
-    public String temp(Model model) {
+    public String temp() {
         return "temp";
+    }
+
+    @GetMapping("/awsS3Test")
+    public void awsS3Test(Model model) {
     }
 
 }
