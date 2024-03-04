@@ -6,6 +6,7 @@ import lombok.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class SaveUserResponse {
+public class CreateAndDeleteUserResponse {
     private String userName;
+    private String userId;
 }

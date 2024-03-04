@@ -1,6 +1,6 @@
 package com.hormonic.crowd_buying.domain.entity;
 
-import com.hormonic.crowd_buying.domain.dto.response.SaveUserResponse;
+import com.hormonic.crowd_buying.domain.dto.response.CreateAndDeleteUserResponse;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.Comment;
@@ -19,82 +19,61 @@ public class User {
     @Id
     @GeneratedValue(generator = "uuid2")
     @Column(columnDefinition = "BINARY(16)", nullable = false)
-    @Comment("유저 UUID")
+    @Comment("사용자 UUID")
     private UUID userUuid;
 
     @Column(nullable = false)
-    @Comment("유저 이름")
+    @Comment("사용자 ID")
+    private String userId;
+
+    @Column(nullable = false)
+    @Comment("사용자 비밀번호")
+    private String userPw;
+
+    @Column(nullable = false)
+    @Comment("사용자 이름")
     private String userName;
 
     @Column(nullable = false)
-    @Comment("유저 이메일")
+    @Comment("사용자 생년월일")
+    private String userBirth;
+
+    @Column(nullable = false)
+    @Comment("사용자 연락처")
+    private String userContact;
+
+    @Column(nullable = false)
+    @Comment("사용자 주소")
+    private String userAddress;
+
+    @Column(nullable = false)
+    @Comment("사용자 이메일")
     private String userEmail;
+
+    @Column(nullable = false)
+    @Comment("사용자 성별")
+    private String userGender;
 
     @CreationTimestamp
     @Column(nullable = false)
     @Comment("생성 날짜")
-    private LocalDateTime createdDate;
+    private LocalDateTime userRegDate;
 
-    public User(String userName, String userEmail) {
+    public User(String userId, String userPw, String userName, String userBirth, String userContact, String userAddress, String userEmail, String userGender) {
+        this.userId = userId;
+        this.userPw = userPw;
         this.userName = userName;
+        this.userBirth = userBirth;
+        this.userContact = userContact;
+        this.userAddress = userAddress;
         this.userEmail = userEmail;
+        this.userGender = userGender;
     }
 
-    public SaveUserResponse toSaveUserResponse() {
-        return SaveUserResponse.builder()
+    public CreateAndDeleteUserResponse toCreateAndDeleteUserResponse() {
+        return CreateAndDeleteUserResponse.builder()
                 .userName(this.getUserName())
+                .userId(this.getUserId())
                 .build();
     }
 }
-
-/*@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
-@Entity
-@Table(name = "user")
-public class User {
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(columnDefinition = "BINARY(16)")
-    @Comment("유저 UUID")
-    private UUID userUuid;
-
-    @Column(nullable = false)
-    @Comment("유저 ID")
-    private String userId;
-
-    @Column(nullable = false)
-    @Comment("유저 PW")
-    private String userPw;
-
-    @Column(nullable = false)
-    @Comment("유저 이름")
-    private String userName;
-
-    @Column(nullable = false)
-    @Comment("유저 생년월일")
-    private String userBitrh;
-
-    @Column(nullable = false)
-    @Comment("유저 연락처")
-    private String userContact;
-
-    @Column(nullable = false)
-    @Comment("유저 주소")
-    private String userAddress;
-
-    @Column(nullable = false)
-    @Comment("유저 이메일")
-    private String userEmail;
-
-    @Column(nullable = false)
-    @Comment("유저 성별")
-    private String userGender;
-
-    @Column(nullable = false)
-    @Comment("유저 가입일")
-    private LocalDateTime userRegdate;
-
-}*/

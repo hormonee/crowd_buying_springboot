@@ -10,7 +10,8 @@
     </select>
 
     <select id="getUserByName" resultType="User">
-        select * from user where user_name = #{user_name}
+        select user_uuid, user_name, user_email, created_date
+            from user where user_name = #{user_name}
     </select>
 
 </mapper>

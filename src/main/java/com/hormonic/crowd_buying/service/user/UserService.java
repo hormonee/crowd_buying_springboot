@@ -1,19 +1,18 @@
 package com.hormonic.crowd_buying.service.user;
 
-import com.hormonic.crowd_buying.domain.dto.request.SaveUserRequest;
-import com.hormonic.crowd_buying.domain.dto.response.SaveUserResponse;
+import com.hormonic.crowd_buying.domain.dto.request.CreateUserRequest;
+import com.hormonic.crowd_buying.domain.dto.request.UpdateUserRequest;
+import com.hormonic.crowd_buying.domain.dto.response.CreateAndDeleteUserResponse;
+import com.hormonic.crowd_buying.domain.dto.response.UpdateUserResponse;
 import com.hormonic.crowd_buying.domain.entity.User;
 import com.hormonic.crowd_buying.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Primary;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -21,56 +20,44 @@ public class UserService {
     private final UserMapper userMapper;
     private final UserRepository userRepository;
 
-//    public User getUserByName(String userName) {
-//        return userRepository.findByUserName(userName);
-//    }
-
-    public User getUserByEmail(String userEmail) {
-        return userRepository.findByUserEmail(userEmail);
+    public User getUserByUserId(String userId) {
+        return userRepository.findByUserId(userId);
     }
 
-//    public List<User> getUserList() {
-//        return userRepository.findAll();
-//    }
-
-    public List<User> getUserListByComponent(String component) {
-        return userRepository.findAllByUserNameLike("%" + component + "%");
+    public List<User> getUserList() {
+        return userRepository.findAll();
     }
-
-    public User testCustomizedMethod(String element) {
-        return userRepository.findByCustomizedMethod(element);
-    }
-
-    public List<User> testCustomizedMethod2(String element) {
-        return userRepository.findByCustomizedMethod2("%" + element + "%");
-    }
-
-//    public User createUser(User user) {
-//        return userRepository.save(user);
-//    }
 
     @Transactional
-    public SaveUserResponse saveUser(SaveUserRequest saveUserRequest) {
-        User newUser = new User(saveUserRequest.getUserName(), saveUserRequest.getUserEmail());
+    public CreateAndDeleteUserResponse createUser(CreateUserRequest createUserRequest) {
+        User newUser = new User(
+                createUserRequest.getUserId(),
+                createUserRequest.getUserPw(),
+                createUserRequest.getUserName(),
+                createUserRequest.getUserBirth(),
+                createUserRequest.getUserContact(),
+                createUserRequest.getUserAddress(),
+                createUserRequest.getUserEmail(),
+                createUserRequest.getUserGender());
 
-        return userRepository.save(newUser).toSaveUserResponse();
+        return userRepository.save(newUser).toCreateAndDeleteUserResponse();
+    }
+
+    @Transactional
+    public int updateUser(UpdateUserRequest updateUserRequest) {
+       return  userRepository.update(updateUserRequest.getUserId(), updateUserRequest.getUserPw(), updateUserRequest.getUserContact(),
+                updateUserRequest.getUserAddress(), updateUserRequest.getUserEmail());
+    }
+
+    public CreateAndDeleteUserResponse deleteUser(String userId) {
+        User willDeletedUser = userRepository.findByUserId(userId);
+        userRepository.deleteById(willDeletedUser.getUserUuid());
+
+        return willDeletedUser.toCreateAndDeleteUserResponse();
     }
 
     /*
-      MyBatis 메서드
+      MyBatis Methods
      */
-    public ArrayList<User> getUserList() {
-        System.out.println("Service 진입");
-        ArrayList<User> userList = userMapper.getUserList();
-        System.out.println(userList);
-        return userList;
-    }
-
-    public User getUserByName(String name) {
-        System.out.println("Service 진입");
-        User user = userMapper.getUserByName(name);
-        System.out.println(user);
-        return user;
-    }
 
 }
