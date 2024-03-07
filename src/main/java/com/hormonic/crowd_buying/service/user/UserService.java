@@ -1,9 +1,8 @@
 package com.hormonic.crowd_buying.service.user;
 
-import com.hormonic.crowd_buying.domain.dto.request.CreateUserRequest;
-import com.hormonic.crowd_buying.domain.dto.request.UpdateUserRequest;
-import com.hormonic.crowd_buying.domain.dto.response.CreateAndDeleteUserResponse;
-import com.hormonic.crowd_buying.domain.dto.response.UpdateUserResponse;
+import com.hormonic.crowd_buying.domain.dto.request.user.CreateUserRequest;
+import com.hormonic.crowd_buying.domain.dto.request.user.UpdateUserRequest;
+import com.hormonic.crowd_buying.domain.dto.response.user.CreateAndDeleteUserResponse;
 import com.hormonic.crowd_buying.domain.entity.User;
 import com.hormonic.crowd_buying.repository.UserRepository;
 import jakarta.transaction.Transactional;
@@ -11,8 +10,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -45,8 +42,11 @@ public class UserService {
 
     @Transactional
     public int updateUser(UpdateUserRequest updateUserRequest) {
-       return  userRepository.update(updateUserRequest.getUserId(), updateUserRequest.getUserPw(), updateUserRequest.getUserContact(),
-                updateUserRequest.getUserAddress(), updateUserRequest.getUserEmail());
+       return  userRepository.update(updateUserRequest.getUserId(),
+                                     updateUserRequest.getUserPw(),
+                                     updateUserRequest.getUserContact(),
+                                     updateUserRequest.getUserAddress(),
+                                     updateUserRequest.getUserEmail());
     }
 
     public CreateAndDeleteUserResponse deleteUser(String userId) {

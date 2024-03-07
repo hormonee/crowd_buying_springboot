@@ -1,4 +1,4 @@
-package com.hormonic.crowd_buying.domain.dto.request;
+package com.hormonic.crowd_buying.domain.dto.request.user;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
@@ -6,8 +6,8 @@ import lombok.*;
 @Getter
 @Setter
 @Builder
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-@NoArgsConstructor
 public class CreateUserRequest {
     @NotBlank(message = "아이디는 필수 입력 사항입니다.")
     private String userId;

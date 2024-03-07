@@ -1,6 +1,6 @@
 package com.hormonic.crowd_buying.domain.entity;
 
-import com.hormonic.crowd_buying.domain.dto.response.CreateAndDeleteUserResponse;
+import com.hormonic.crowd_buying.domain.dto.response.user.CreateAndDeleteUserResponse;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.Comment;
@@ -9,12 +9,12 @@ import org.hibernate.annotations.CreationTimestamp;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-@Getter
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
 @Entity
 @Table
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
+@Builder
 public class User {
     @Id
     @GeneratedValue(generator = "uuid2")
@@ -56,7 +56,7 @@ public class User {
 
     @CreationTimestamp
     @Column(nullable = false)
-    @Comment("생성 날짜")
+    @Comment("사용자 등록 날짜")
     private LocalDateTime userRegDate;
 
     public User(String userId, String userPw, String userName, String userBirth, String userContact, String userAddress, String userEmail, String userGender) {

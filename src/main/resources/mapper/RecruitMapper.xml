@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.hormonic.crowd_buying.service.recruit.RecruitMapper">
+
+    <!--<select id="getRecruitListByCriterion" resultType="com.hormonic.crowd_buying.domain.entity.recruit.Recruit">
+        SELECT * FROM RECRUIT WHERE RECRUIT_TITLE LIKE CONCAT('%', #{recruitTitle}, '%')
+        <CHOOSE>
+            <WHEN TEST="#{orderBy} == ''">ORDER BY RECRUIT_LIKED DESC, RECRUIT_REG_DATE DESC</WHEN>
+            <WHEN TEST="#{orderBy} == 'like'">ORDER BY RECRUIT_LIKED DESC, RECRUIT_REG_DATE DESC</WHEN>
+            <WHEN TEST="#{orderBy} == 'hit'">ORDER BY RECRUIT_HIT DESC, RECRUIT_REG_DATE DESC</WHEN>
+            <WHEN TEST="#{orderBy} == 'date'">ORDER BY RECRUIT_REG_DATE DESC</WHEN>
+        </CHOOSE>
+    </select>-->
+
+    <select id="getRecruitList" resultType="com.hormonic.crowd_buying.domain.entity.recruit.Recruit">
+        SELECT * FROM RECRUIT
+        <!--<CHOOSE>
+            <WHEN TEST="categoryId == null">RECRUIT R</WHEN>
+            <WHEN TEST="categoryId != null">(SELECT * FROM RECRUIT WHERE CATEGORY_ID  = #{categoryId}) R</WHEN>
+        </CHOOSE>-->
+    </select>
+
+    <!--<select id="getRecruitList" resultType="Category">
+        SELECT * FROM
+        <CHOOSE>
+            <WHEN TEST="categoryId == null"> RECRUIT R</WHEN>
+            <WHEN TEST="categoryId != null"> (SELECT * FROM RECRUIT WHERE CATEGORY_ID  = #{categoryId}) R</WHEN>
+        </CHOOSE>
+        LEFT OUTER JOIN (
+            SELECT C1.CATEGORY_ID, C1.CATEGORY_DETAIL_NM
+            FROM CATEGORY C1
+            LEFT OUTER JOIN CATEGORY C2
+            ON C1.CATEGORY_PARENT_LV = C2.CATEGORY_LV AND C1.CATEGORY_PARENT_DETAIL_LV = C2.CATEGORY_DETAIL_LV AND C1.CATEGORY_GROUP_ID = C2.CATEGORY_GROUP_ID
+            LEFT OUTER JOIN CATEGORY C3
+            ON C2.CATEGORY_PARENT_LV = C3.CATEGORY_LV AND C2.CATEGORY_PARENT_DETAIL_LV = C3.CATEGORY_DETAIL_LV
+            ) C
+        ON R.CATEGORY_ID = C.CATEGORY_ID
+        WHERE RECRUIT_TITLE LIKE CONCAT('%', #{recruitTitle}, '%')
+        <CHOOSE>
+            <WHEN TEST="orderBy == ''">ORDER BY RECRUIT_LIKED DESC, RECRUIT_REG_DATE DESC</WHEN>
+            <WHEN TEST="orderBy == 'like'">ORDER BY RECRUIT_LIKED DESC, RECRUIT_REG_DATE DESC</WHEN>
+            <WHEN TEST="orderBy == 'hit'">ORDER BY RECRUIT_HIT DESC, RECRUIT_REG_DATE DESC</WHEN>
+            <WHEN TEST="orderBy == 'date'">ORDER BY RECRUIT_REG_DATE DESC</WHEN>
+        </CHOOSE>
+    </select>-->
+
+</mapper>

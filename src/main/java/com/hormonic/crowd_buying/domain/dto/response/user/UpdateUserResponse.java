@@ -1,14 +1,11 @@
-package com.hormonic.crowd_buying.domain.dto.response;
+package com.hormonic.crowd_buying.domain.dto.response.user;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Getter
 @Builder
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-@NoArgsConstructor
 public class UpdateUserResponse {
     private String userId;
     private String userPw;

@@ -1,10 +1,9 @@
 package com.hormonic.crowd_buying.controller;
 
-import com.hormonic.crowd_buying.domain.dto.request.CreateUserRequest;
-import com.hormonic.crowd_buying.domain.dto.request.DeleteUserRequest;
-import com.hormonic.crowd_buying.domain.dto.request.UpdateUserRequest;
-import com.hormonic.crowd_buying.domain.dto.response.CreateAndDeleteUserResponse;
-import com.hormonic.crowd_buying.domain.dto.response.UpdateUserResponse;
+import com.hormonic.crowd_buying.domain.dto.request.user.CreateUserRequest;
+import com.hormonic.crowd_buying.domain.dto.request.user.DeleteUserRequest;
+import com.hormonic.crowd_buying.domain.dto.request.user.UpdateUserRequest;
+import com.hormonic.crowd_buying.domain.dto.response.user.CreateAndDeleteUserResponse;
 import com.hormonic.crowd_buying.domain.entity.User;
 import com.hormonic.crowd_buying.service.user.UserService;
 import jakarta.validation.Valid;
@@ -14,7 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/users")
@@ -39,9 +37,7 @@ public class UserController {
 
     @PutMapping
     public int updateUser(@RequestBody @Valid UpdateUserRequest updateUserRequest) {
-        // UPDATE Query 성공
         if(userService.updateUser(updateUserRequest) == 1) return 1;
-
         return 0;
     }
 
