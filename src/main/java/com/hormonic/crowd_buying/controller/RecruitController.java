@@ -1,30 +1,72 @@
 package com.hormonic.crowd_buying.controller;
 
-import com.hormonic.crowd_buying.domain.entity.User;
+import com.hormonic.crowd_buying.domain.dto.request.recruit.CreateRecruitRequest;
+import com.hormonic.crowd_buying.domain.dto.request.recruit.ExamineRecruitRequest;
+import com.hormonic.crowd_buying.domain.dto.request.recruit.GetRecruitRequest;
+import com.hormonic.crowd_buying.domain.dto.request.recruit.UpdateRecruitRequest;
+import com.hormonic.crowd_buying.domain.dto.response.recruit.CreateAndDeleteRecruitResponse;
+import com.hormonic.crowd_buying.domain.entity.recruit.Recruit;
 import com.hormonic.crowd_buying.service.recruit.RecruitService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/recruits")
 @RequiredArgsConstructor
 public class RecruitController {
-    private final RecruitService recruiteService;
+    private final RecruitService recruitService;
 
-//    @GetMapping
-//    public ResponseEntity<List<User>> getUserList() {
-//        return ResponseEntity.ok(recruiteService.getRecruitList());
-//    }
-//
-//    @GetMapping("/{id}")
-//    public ResponseEntity<User> getUserByUserId(@PathVariable("id") String userId) {
-//        return ResponseEntity.ok(recruiteService.getRecruitByUserId(userId));
-//    }
+    @GetMapping
+    public ResponseEntity<List<Recruit>> getRecruitList(@RequestBody GetRecruitRequest getRecruitRequest) {
+        return ResponseEntity.ok(recruitService.getRecruitList(getRecruitRequest));
+    }
+
+    @GetMapping("/{uuid}")
+    public ResponseEntity<Optional<Recruit>> getRecruitByRecruitUuid(@PathVariable("uuid") UUID recruitUuid) {
+        return ResponseEntity.ok(recruitService.getRecruitByRecruitUuid(recruitUuid));
+    }
+
+    @PostMapping
+    public ResponseEntity<CreateAndDeleteRecruitResponse> createRecruit(@RequestPart("dto") @Valid CreateRecruitRequest createRecruitRequest,
+                                                                        @RequestPart("file") MultipartFile file) {
+        return new ResponseEntity(recruitService.createRecruit(createRecruitRequest, file), HttpStatus.CREATED);
+    }
+
+    @PutMapping("/{uuid}/examine")
+    public ResponseEntity<Recruit> examineRecruit(@PathVariable("uuid") UUID recruitUuid,
+                              @RequestBody @Valid ExamineRecruitRequest examineRecruitRequest) {
+        recruitService.examineRecruit(recruitUuid, examineRecruitRequest);
+
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/{uuid}/participate")
+    public ResponseEntity<Recruit> participateRecruit(@PathVariable("uuid") UUID recruitUuid,
+                                                      @RequestParam(value = "userId") String userId) {
+        recruitService.participateRecruit(new UpdateRecruitRequest(recruitUuid, userId));
+        return ResponseEntity.ok().build();  // @RequestBody 로 바꾸지 않아도 가능한지?
+    }
+
+    @PutMapping("/{uuid}/withdraw")
+    public ResponseEntity<Recruit> cancelParticipateRecruit(@PathVariable("uuid") UUID recruitUuid,
+                                                            @RequestParam(value = "userId") String userId) {
+        recruitService.cancelParticipateRecruit(new UpdateRecruitRequest(recruitUuid, userId));
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/{uuid}/close")
+    public ResponseEntity<Recruit> closeRecruit(@PathVariable("uuid") UUID recruitUuid) {
+        recruitService.closeRecruit(new UpdateRecruitRequest(recruitUuid));
+
+        return ResponseEntity.ok().build();
+    }
 
 }

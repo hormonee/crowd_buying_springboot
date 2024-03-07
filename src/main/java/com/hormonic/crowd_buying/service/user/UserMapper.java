@@ -7,5 +7,6 @@ import java.util.ArrayList;
 @Mapper
 public interface UserMapper {
     public ArrayList<User> getUserList();
+
     public User getUserByName(String name);
 }
