@@ -25,6 +25,6 @@ public class JpaSpecification {
 
     public static Specification<Bookmark> notEndedBookmark() {
         return (root, query, cb) -> cb.lessThan(root.get("recruitMemberParticipated"),
-                                                                          root.get("recruitMemberTotal"));
+                                                root.get("recruitMemberTotal"));
     }
 }

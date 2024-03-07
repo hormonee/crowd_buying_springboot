@@ -5,12 +5,26 @@
 
 <mapper namespace="com.hormonic.crowd_buying.service.category.CategoryMapper">
 
-    <select id="getCategoryList" resultType="com.hormonic.crowd_buying.domain.entity.Category">
-        select * from category;
+    <select id="getCategoryListOfIdAndName" resultType="com.hormonic.crowd_buying.domain.dto.response.category.CategoryResponse">
+        select category_id, category_detail_nm from category
+    </select>
+
+    <select id="getSubCategoryByCategoryId" resultType="com.hormonic.crowd_buying.domain.dto.response.category.CategoryResponse">
+        select category_id, category_detail_nm from category
+        where category_parent_lv = #{categoryLv}
+          and category_parent_detail_lv = #{categoryDetailLv}
     </select>
 
     <select id="getCategoryByCategoryId" resultType="Category">
         select * from category where category_id = #{categoryId}
+    </select>
+
+    <select id="getCategoryNameByCategoryId" resultType="com.hormonic.crowd_buying.domain.dto.response.category.CategoryResponse">
+        select category_id, category_detail_nm from category where category_id = #{categoryId}
+    </select>
+
+    <select id="getCategoryIdByCategoryName" resultType="com.hormonic.crowd_buying.domain.dto.response.category.CategoryResponse">
+        select category_id, category_detail_nm from category where category_detail_nm = #{categoryDetailName}
     </select>
 
 </mapper>
