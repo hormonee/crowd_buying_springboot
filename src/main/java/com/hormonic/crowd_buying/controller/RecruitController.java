@@ -5,9 +5,7 @@ import com.hormonic.crowd_buying.domain.dto.request.recruit.ExamineRecruitReques
 import com.hormonic.crowd_buying.domain.dto.request.recruit.GetRecruitListRequest;
 import com.hormonic.crowd_buying.domain.dto.request.recruit.UpdateRecruitRequest;
 import com.hormonic.crowd_buying.domain.dto.response.recruit.CreateAndDeleteRecruitResponse;
-import com.hormonic.crowd_buying.domain.dto.response.recruit.GetRecruitMemberResponse;
 import com.hormonic.crowd_buying.domain.entity.recruit.Recruit;
-import com.hormonic.crowd_buying.domain.entity.recruit.RecruitMember;
 import com.hormonic.crowd_buying.service.recruit.RecruitMemberService;
 import com.hormonic.crowd_buying.service.recruit.RecruitService;
 import jakarta.validation.Valid;
@@ -43,7 +41,7 @@ public class RecruitController {
         Recruit recruit = recruitService.getRecruitByRecruitUuid(recruitUuid).get();
         recruitInfo.put("recruit", recruit);
 
-        List<String> recruitMember = recruitMemberService.getRecruitMemberByRecruitUuid((recruitUuid));
+        List<String> recruitMember = recruitMemberService.getRecruitMemberByRecruitUuidConsideringRecruitType((recruitUuid));
         recruitInfo.put("recruitMember", recruitMember);
 
         return ResponseEntity.ok(recruitInfo);
@@ -80,7 +78,6 @@ public class RecruitController {
     @PutMapping("/{uuid}/close")
     public ResponseEntity<Recruit> closeRecruit(@PathVariable("uuid") UUID recruitUuid) {
         recruitService.closeRecruit(new UpdateRecruitRequest(recruitUuid));
-
         return ResponseEntity.ok().build();
     }
 
