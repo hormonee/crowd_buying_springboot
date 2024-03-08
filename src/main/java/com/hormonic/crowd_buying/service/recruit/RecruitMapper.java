@@ -1,9 +1,8 @@
 package com.hormonic.crowd_buying.service.recruit;
 
-import com.hormonic.crowd_buying.domain.dto.request.recruit.GetRecruitRequest;
+import com.hormonic.crowd_buying.domain.dto.request.recruit.GetRecruitListRequest;
 import com.hormonic.crowd_buying.domain.entity.recruit.Recruit;
 import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
 
 import java.util.ArrayList;
 
@@ -11,5 +10,5 @@ import java.util.ArrayList;
 public interface RecruitMapper {
     public ArrayList<Recruit> getRecruitListByCriterion(String recruitTitle, String orderBy);
 
-    public ArrayList<Recruit> getRecruitList(GetRecruitRequest getRecruitRequest);
+    public ArrayList<Recruit> getRecruitList(GetRecruitListRequest getRecruitListRequest);
 }
