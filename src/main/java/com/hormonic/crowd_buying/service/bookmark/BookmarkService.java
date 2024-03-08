@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -27,6 +28,12 @@ public class BookmarkService {
         Sort sort = Sort.by( Sort.Order.desc("bookmarkNo") );
 
         return bookmarkRepository.findAll(spec, sort);
+    }
+
+    public List<String> getBookmarkUserOfRecruit(UUID recruitUuid) {
+        return bookmarkRepository.findAllByRecruitUuid(recruitUuid).stream()
+                .map(i -> i.getUserId())
+                .collect(Collectors.toList());
     }
 
     public Boolean isBookmarked(String userId, UUID recruitUuid) {

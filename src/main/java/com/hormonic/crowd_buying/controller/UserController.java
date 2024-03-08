@@ -36,9 +36,9 @@ public class UserController {
     }
 
     @PutMapping
-    public int updateUser(@RequestBody @Valid UpdateUserRequest updateUserRequest) {
-        if(userService.updateUser(updateUserRequest) == 1) return 1;
-        return 0;
+    public ResponseEntity<User> updateUser(@RequestBody @Valid UpdateUserRequest updateUserRequest) {
+        userService.updateUser(updateUserRequest);
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping

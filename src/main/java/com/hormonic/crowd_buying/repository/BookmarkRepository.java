@@ -16,6 +16,8 @@ import java.util.UUID;
 public interface BookmarkRepository extends JpaRepository<Bookmark, Integer> {
     List<Bookmark> findAll(Specification<Bookmark> spec, Sort sort);
 
+    List<Bookmark> findAllByRecruitUuid(UUID recruitUuid);
+
     Boolean existsByUserIdAndRecruitUuid(String userId, UUID recruitUuid);
 
     @Modifying(clearAutomatically = true, flushAutomatically = true)
