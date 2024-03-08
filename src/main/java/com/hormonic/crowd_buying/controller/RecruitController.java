@@ -2,10 +2,13 @@ package com.hormonic.crowd_buying.controller;
 
 import com.hormonic.crowd_buying.domain.dto.request.recruit.CreateRecruitRequest;
 import com.hormonic.crowd_buying.domain.dto.request.recruit.ExamineRecruitRequest;
-import com.hormonic.crowd_buying.domain.dto.request.recruit.GetRecruitRequest;
+import com.hormonic.crowd_buying.domain.dto.request.recruit.GetRecruitListRequest;
 import com.hormonic.crowd_buying.domain.dto.request.recruit.UpdateRecruitRequest;
 import com.hormonic.crowd_buying.domain.dto.response.recruit.CreateAndDeleteRecruitResponse;
+import com.hormonic.crowd_buying.domain.dto.response.recruit.GetRecruitMemberResponse;
 import com.hormonic.crowd_buying.domain.entity.recruit.Recruit;
+import com.hormonic.crowd_buying.domain.entity.recruit.RecruitMember;
+import com.hormonic.crowd_buying.service.recruit.RecruitMemberService;
 import com.hormonic.crowd_buying.service.recruit.RecruitService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -14,24 +17,36 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api/recruits")
 @RequiredArgsConstructor
 public class RecruitController {
     private final RecruitService recruitService;
+    private final RecruitMemberService recruitMemberService;
 
     @GetMapping
-    public ResponseEntity<List<Recruit>> getRecruitList(@RequestBody GetRecruitRequest getRecruitRequest) {
-        return ResponseEntity.ok(recruitService.getRecruitList(getRecruitRequest));
+    public ResponseEntity<List<Recruit>> getRecruitList(@RequestBody GetRecruitListRequest getRecruitListRequest) {
+        return ResponseEntity.ok(recruitService.getRecruitList(getRecruitListRequest));
     }
 
+//    @GetMapping("/{uuid}")
+//    public ResponseEntity<Optional<Recruit>> getRecruitByRecruitUuid(@PathVariable("uuid") UUID recruitUuid) {
+//        return ResponseEntity.ok(recruitService.getRecruitByRecruitUuid(recruitUuid));
+//    }
+
     @GetMapping("/{uuid}")
-    public ResponseEntity<Optional<Recruit>> getRecruitByRecruitUuid(@PathVariable("uuid") UUID recruitUuid) {
-        return ResponseEntity.ok(recruitService.getRecruitByRecruitUuid(recruitUuid));
+    public ResponseEntity<Map<String, Object>> getRecruitByRecruitUuid(@PathVariable("uuid") UUID recruitUuid) {
+        Map<String, Object> recruitInfo = new HashMap();
+
+        Recruit recruit = recruitService.getRecruitByRecruitUuid(recruitUuid).get();
+        recruitInfo.put("recruit", recruit);
+
+        List<String> recruitMember = recruitMemberService.getRecruitMemberByRecruitUuid((recruitUuid));
+        recruitInfo.put("recruitMember", recruitMember);
+
+        return ResponseEntity.ok(recruitInfo);
     }
 
     @PostMapping

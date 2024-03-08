@@ -1,5 +1,6 @@
 package com.hormonic.crowd_buying.domain.entity.recruit;
 
+import com.hormonic.crowd_buying.domain.dto.response.recruit.GetRecruitMemberResponse;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.Comment;
@@ -27,5 +28,11 @@ public class RecruitMember {
 
     public RecruitMember(RecruitMemberPK recruitMemberPK) {
         this.recruitMemberPK = recruitMemberPK;
+    }
+
+    public GetRecruitMemberResponse toGetRecruitMemberResponse(RecruitMember recruitMember) {
+        return GetRecruitMemberResponse.builder()
+                .userId(recruitMember.getRecruitMemberPK().getUserId())
+                .build();
     }
 }

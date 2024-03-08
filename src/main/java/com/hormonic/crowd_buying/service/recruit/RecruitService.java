@@ -2,15 +2,15 @@ package com.hormonic.crowd_buying.service.recruit;
 
 import com.hormonic.crowd_buying.domain.dto.request.recruit.CreateRecruitRequest;
 import com.hormonic.crowd_buying.domain.dto.request.recruit.ExamineRecruitRequest;
-import com.hormonic.crowd_buying.domain.dto.request.recruit.GetRecruitRequest;
+import com.hormonic.crowd_buying.domain.dto.request.recruit.GetRecruitListRequest;
 import com.hormonic.crowd_buying.domain.dto.request.recruit.UpdateRecruitRequest;
 import com.hormonic.crowd_buying.domain.dto.response.recruit.CreateAndDeleteRecruitResponse;
+import com.hormonic.crowd_buying.domain.dto.response.recruit.GetRecruitMemberResponse;
 import com.hormonic.crowd_buying.domain.entity.recruit.Recruit;
 import com.hormonic.crowd_buying.util.specification.JpaSpecification;
 import com.hormonic.crowd_buying.repository.BookmarkRepository;
 import com.hormonic.crowd_buying.repository.RecruitRepository;
 import com.hormonic.crowd_buying.service.aws.AwsS3Service;
-import com.hormonic.crowd_buying.service.bookmark.BookmarkService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
@@ -38,19 +38,19 @@ public class RecruitService {
         return recruitRepository.findById(recruitUuid);
     }
 
-    public List<Recruit> getRecruitList(GetRecruitRequest getRecruitRequest) {
+    public List<Recruit> getRecruitList(GetRecruitListRequest getRecruitListRequest) {
         // Pageable pageable = PageRequest.ofSize(2).withPage(1).withSort(sort);
         Specification<Recruit> spec;
-        if(getRecruitRequest.getCategoryId() == 0) {
+        if(getRecruitListRequest.getCategoryId() == 0) {
             spec = JpaSpecification.notEndedRecruit()
-                    .and( JpaSpecification.recruitTitleLike(getRecruitRequest.getRecruitTitle()) );
+                    .and( JpaSpecification.recruitTitleLike(getRecruitListRequest.getRecruitTitle()) );
         } else {
             spec = JpaSpecification.notEndedRecruit()
-                    .and( JpaSpecification.recruitCategoryLike(getRecruitRequest.getCategoryId())
-                    .and( JpaSpecification.recruitTitleLike(getRecruitRequest.getRecruitTitle()) ));
+                    .and( JpaSpecification.recruitCategoryLike(getRecruitListRequest.getCategoryId())
+                    .and( JpaSpecification.recruitTitleLike(getRecruitListRequest.getRecruitTitle()) ));
         }
 
-        String orderBy = getRecruitRequest.getOrderBy();
+        String orderBy = getRecruitListRequest.getOrderBy();
         Sort sort = null;
         if(orderBy == null) sort = Sort.by( Sort.Order.desc("recruitBookmarked"), Sort.Order.desc("recruitRegDate") );
         else if(orderBy.equals("like")) sort = Sort.by( Sort.Order.desc("recruitBookmarked"), Sort.Order.desc("recruitRegDate") );
