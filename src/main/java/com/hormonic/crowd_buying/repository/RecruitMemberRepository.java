@@ -16,4 +16,8 @@ public interface RecruitMemberRepository extends JpaRepository<RecruitMember, Re
     int countByRecruitMemberPK_RecruitUuid(UUID recruitUuid);
 
     List<RecruitMember> findAllByRecruitMemberPK_UserId(String userId);
+
+    boolean existsByRecruitMemberPK(RecruitMemberPK recruitMemberPK);
+
+    void deleteAllByRecruitMemberPK_RecruitUuid(UUID recruitUuid);
 }

@@ -20,13 +20,12 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class AwsS3Service {
-    @Autowired
     private final AmazonS3 amazonS3;
 
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
 
-    // 업로드
+    // 파일 타입 변환: MultipartFile -> File
     public AwsS3 upload(MultipartFile multipartFile, String dirName) throws IOException {
         File file = convertMultipartFileToFile(multipartFile)
                 .orElseThrow(() -> new IllegalArgumentException("MultipartFile -> File convert fail"));
@@ -34,6 +33,7 @@ public class AwsS3Service {
         return upload(file, dirName);
     }
 
+    // 이미지 S3에 업로드 및 이미지 저장 경로 반환
     private AwsS3 upload(File file, String dirName) {
         String key = randomFileName(file, dirName);
         String path = putS3(file, key);
@@ -45,6 +45,7 @@ public class AwsS3Service {
                 .build();
     }
 
+    // S3 버킷에 저장될 파일 이름 생성
     private String randomFileName(File file, String dirName) {
         return dirName + "/" + UUID.randomUUID() + file.getName();
     }
@@ -59,7 +60,6 @@ public class AwsS3Service {
         return amazonS3.getUrl(bucket, fileName).toString();
     }
 
-    // 삭제
     private void removeFile(File file) {
         file.delete();
     }
@@ -76,6 +76,7 @@ public class AwsS3Service {
         return Optional.empty();
     }
 
+    // S3 버킷에서 파일 삭제
     public void remove(AwsS3 awsS3) {
         if (!amazonS3.doesObjectExist(bucket, awsS3.getKey())) {
             throw new AmazonS3Exception("Object " +awsS3.getKey()+ " does not exist!");
@@ -83,8 +84,8 @@ public class AwsS3Service {
         amazonS3.deleteObject(bucket, awsS3.getKey());
     }
 
-    // 불러오기
-    public String getThumbnailPath(String path) {
+    // 파일 경로 불러오기
+    public String getFilePath(String path) {
         return amazonS3.getUrl(bucket, path).toString();
     }
 }

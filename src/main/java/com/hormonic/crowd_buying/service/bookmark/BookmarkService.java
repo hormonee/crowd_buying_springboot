@@ -22,6 +22,7 @@ public class BookmarkService {
     private final BookmarkRepository bookmarkRepository;
     private final RecruitRepository recruitRepository;
 
+    // 사용자가 북마크한 리크루트 목록 조회
     public List<Bookmark> getBookmarkListByUserId(String userId) {
         Specification<Bookmark> spec = JpaSpecification.bookmarkUserIdLike(userId)
                 .and( JpaSpecification.notEndedBookmark() );
@@ -30,16 +31,19 @@ public class BookmarkService {
         return bookmarkRepository.findAll(spec, sort);
     }
 
+    // 특정 리크루트를 북마크한 사용자들 아이디만 리스트로 출력
     public List<String> getBookmarkUserOfRecruit(UUID recruitUuid) {
         return bookmarkRepository.findAllByRecruitUuid(recruitUuid).stream()
                 .map(i -> i.getUserId())
                 .collect(Collectors.toList());
     }
 
+    // 한 사용자가 특정 리크루트를 북마크했는지 여부 반환
     public Boolean isBookmarked(String userId, UUID recruitUuid) {
         return bookmarkRepository.existsByUserIdAndRecruitUuid(userId, recruitUuid);
     }
 
+    // 북마크 생성
     @Transactional
     public void createBookmark(CreateBookmarkRequest createBookmarkRequest) {
         Bookmark newBookmark = new Bookmark(
@@ -54,6 +58,7 @@ public class BookmarkService {
         recruitRepository.plusRecruitBookmarked(newBookmark.getRecruitUuid());
     }
 
+    // 북마크 삭제
     @Transactional
     public void deleteBookmark(DeleteBookmarkRequest deleteBookmarkRequest) {
         bookmarkRepository.deleteByUserIdAndRecruitUuid(deleteBookmarkRequest.getUserId(),

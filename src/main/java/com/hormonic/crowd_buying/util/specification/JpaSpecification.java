@@ -15,8 +15,13 @@ public class JpaSpecification {
         return (root, query, cb) -> cb.equal(root.get("categoryId"), categoryId);
     }
 
-    public static Specification<Recruit> notEndedRecruit() {
-        return (root, query, cb) -> cb.isNull(root.get("recruitEndDate"));
+    public static Specification<Recruit> isEndedRecruit(String isEnded) {
+        if(isEnded.equals("N")) return (root, query, cb) -> cb.isNull(root.get("recruitEndDate"));
+        else return (root, query, cb) -> cb.isNotNull(root.get("recruitEndDate"));
+    }
+
+    public static Specification<Recruit> examinationResultLike(String examinationResult) {
+        return (root, query, cb) -> cb.like(root.get("examinationResult"), examinationResult);
     }
 
     public static Specification<Bookmark> bookmarkUserIdLike(String userId) {
@@ -27,4 +32,5 @@ public class JpaSpecification {
         return (root, query, cb) -> cb.lessThan(root.get("recruitMemberParticipated"),
                                                 root.get("recruitMemberTotal"));
     }
+
 }

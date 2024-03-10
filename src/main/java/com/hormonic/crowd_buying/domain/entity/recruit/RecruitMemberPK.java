@@ -13,6 +13,7 @@ import java.util.UUID;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
+@Builder
 @EqualsAndHashCode
 public class RecruitMemberPK implements Serializable {
     @Column(columnDefinition = "BINARY(16)", nullable = false)
