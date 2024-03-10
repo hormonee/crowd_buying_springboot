@@ -5,9 +5,9 @@ import lombok.*;
 
 @Getter
 @Setter
-@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
+@Builder
 public class CreateUserRequest {
     @NotBlank(message = "아이디는 필수 입력 사항입니다.")
     private String userId;

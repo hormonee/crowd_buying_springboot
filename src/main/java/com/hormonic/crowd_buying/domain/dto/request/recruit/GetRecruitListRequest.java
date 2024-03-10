@@ -8,7 +8,9 @@ import lombok.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 public class GetRecruitListRequest {
-    private Integer categoryId = 0;
+    private Integer categoryId;
     private String recruitTitle = "";
     private String orderBy;
+    private String isEnded = "A";  // E: end, N: not end, A: All (end + not end)
+    private String examinationResult = "";
 }

@@ -16,7 +16,6 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class UserService {
-    private final UserMapper userMapper;
     private final UserRepository userRepository;
     private final NotificationRepository notificationRepository;
 
@@ -28,6 +27,7 @@ public class UserService {
         return userRepository.findAll();
     }
 
+    // 회원 가입
     @Transactional
     public CreateAndDeleteUserResponse createUser(CreateUserRequest createUserRequest) {
         User newUser = new User(
@@ -51,6 +51,7 @@ public class UserService {
         return createAndDeleteUserResponse;
     }
 
+    // 회원 정보 수정
     @Transactional
     public void updateUser(UpdateUserRequest updateUserRequest) {
        userRepository.update(updateUserRequest.getUserId(),
@@ -66,15 +67,12 @@ public class UserService {
                                                 .build());
     }
 
+    // 회원 탈퇴
     public CreateAndDeleteUserResponse deleteUser(String userId) {
         User willDeletedUser = userRepository.findByUserId(userId);
         userRepository.deleteById(willDeletedUser.getUserUuid());
 
         return willDeletedUser.toCreateAndDeleteUserResponse();
     }
-
-    /*
-      MyBatis Methods
-     */
 
 }
