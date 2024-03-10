@@ -4,7 +4,7 @@ import com.hormonic.crowd_buying.domain.dto.request.user.CreateUserRequest;
 import com.hormonic.crowd_buying.domain.dto.request.user.UpdateUserRequest;
 import com.hormonic.crowd_buying.domain.dto.response.user.CreateAndDeleteUserResponse;
 import com.hormonic.crowd_buying.domain.entity.Notification;
-import com.hormonic.crowd_buying.domain.entity.User;
+import com.hormonic.crowd_buying.domain.entity.Users;
 import com.hormonic.crowd_buying.repository.NotificationRepository;
 import com.hormonic.crowd_buying.repository.UserRepository;
 import jakarta.transaction.Transactional;
@@ -19,18 +19,18 @@ public class UserService {
     private final UserRepository userRepository;
     private final NotificationRepository notificationRepository;
 
-    public User getUserByUserId(String userId) {
+    public Users getUserByUserId(String userId) {
         return userRepository.findByUserId(userId);
     }
 
-    public List<User> getUserList() {
+    public List<Users> getUserList() {
         return userRepository.findAll();
     }
 
     // 회원 가입
     @Transactional
     public CreateAndDeleteUserResponse createUser(CreateUserRequest createUserRequest) {
-        User newUser = new User(
+        Users newUsers = new Users(
                 createUserRequest.getUserId(),
                 createUserRequest.getUserPw(),
                 createUserRequest.getUserName(),
@@ -39,7 +39,7 @@ public class UserService {
                 createUserRequest.getUserAddress(),
                 createUserRequest.getUserEmail(),
                 createUserRequest.getUserGender());
-        CreateAndDeleteUserResponse createAndDeleteUserResponse = userRepository.save(newUser).toCreateAndDeleteUserResponse();
+        CreateAndDeleteUserResponse createAndDeleteUserResponse = userRepository.save(newUsers).toCreateAndDeleteUserResponse();
 
         notificationRepository.save( Notification.builder()
                                                 .userId(createAndDeleteUserResponse.getUserId())
@@ -69,10 +69,10 @@ public class UserService {
 
     // 회원 탈퇴
     public CreateAndDeleteUserResponse deleteUser(String userId) {
-        User willDeletedUser = userRepository.findByUserId(userId);
-        userRepository.deleteById(willDeletedUser.getUserUuid());
+        Users willDeletedUsers = userRepository.findByUserId(userId);
+        userRepository.deleteById(willDeletedUsers.getUserUuid());
 
-        return willDeletedUser.toCreateAndDeleteUserResponse();
+        return willDeletedUsers.toCreateAndDeleteUserResponse();
     }
 
 }

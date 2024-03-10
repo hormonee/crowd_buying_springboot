@@ -4,7 +4,7 @@ import com.hormonic.crowd_buying.domain.dto.request.user.CreateUserRequest;
 import com.hormonic.crowd_buying.domain.dto.request.user.DeleteUserRequest;
 import com.hormonic.crowd_buying.domain.dto.request.user.UpdateUserRequest;
 import com.hormonic.crowd_buying.domain.dto.response.user.CreateAndDeleteUserResponse;
-import com.hormonic.crowd_buying.domain.entity.User;
+import com.hormonic.crowd_buying.domain.entity.Users;
 import com.hormonic.crowd_buying.service.user.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -27,14 +27,14 @@ public class UserController {
 
     @GetMapping
     @Operation(summary = "사용자 목록 조회", description = "관리자용 전체 사용자 목록 조회")
-    public ResponseEntity<List<User>> getUserList() {
+    public ResponseEntity<List<Users>> getUserList() {
         // session accessType attribute 를 통해 관리자인지 검증 필요
         return ResponseEntity.ok(userService.getUserList());
     }
 
     @GetMapping("/{id}")
     @Operation(summary = "특정 사용자 정보 조회", description = "사용자 ID를 통해 특정 한 명의 사용자 정보 조회")
-    public ResponseEntity<User> getUserByUserId(@PathVariable("id") String userId) {
+    public ResponseEntity<Users> getUserByUserId(@PathVariable("id") String userId) {
         return ResponseEntity.ok(userService.getUserByUserId(userId));
     }
 
@@ -63,7 +63,7 @@ public class UserController {
             @Parameter(name = "userAddress", description = "주소", required = true),
             @Parameter(name = "userEmail", description = "이메일", required = true)
     })
-    public ResponseEntity<User> updateUser(@RequestBody @Valid UpdateUserRequest updateUserRequest) {
+    public ResponseEntity<Users> updateUser(@RequestBody @Valid UpdateUserRequest updateUserRequest) {
         userService.updateUser(updateUserRequest);
         return ResponseEntity.ok().build();
     }

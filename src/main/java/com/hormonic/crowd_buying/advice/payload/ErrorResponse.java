@@ -2,7 +2,6 @@ package com.hormonic.crowd_buying.advice.payload;
 
 import lombok.Builder;
 import lombok.Getter;
-import org.springframework.cglib.core.Local;
 
 import java.time.LocalDateTime;
 

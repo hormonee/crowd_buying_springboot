@@ -17,6 +17,9 @@ import com.hormonic.crowd_buying.repository.RecruitRepository;
 import com.hormonic.crowd_buying.service.aws.AwsS3Service;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -49,8 +52,7 @@ public class RecruitService {
     }
 
     // 사용자용 리크루트 목록 조회 - 등록 심사 통과하고 종료되지 않은 리크루트들만 출력
-    public List<Recruit> getRecruitListForUser(GetRecruitListRequest getRecruitListRequest) {
-        // Pageable pageable = PageRequest.ofSize(2).withPage(1).withSort(sort);
+    public Page<Recruit> getRecruitListForUser(GetRecruitListRequest getRecruitListRequest, Pageable pageable) {
         Specification<Recruit> spec;
 
         // 카테고리 미지정
@@ -65,6 +67,7 @@ public class RecruitService {
                     .and( JpaSpecification.recruitTitleLike(getRecruitListRequest.getRecruitTitle())
                     .and( JpaSpecification.examinationResultLike("A") ) ) );
         }
+
         // 정렬 기준
         String orderBy = getRecruitListRequest.getOrderBy();
         Sort sort = null;
@@ -73,41 +76,27 @@ public class RecruitService {
         else if(orderBy.equals("date")) sort = Sort.by( Sort.Order.desc("recruitRegDate") );
         else if(orderBy.equals("bookmark")) sort = Sort.by( Sort.Order.desc("recruitBookmarked"), Sort.Order.desc("recruitRegDate") );
 
-        return recruitRepository.findAll(spec, sort);
+        return recruitRepository.findAll(spec, pageable);
     }
 
     // 관리자용 리크루트 목록 조회 - 모든 리크루트 조회 가능
-    public List<Recruit> getRecruitListForAdmin(GetRecruitListRequest getRecruitListRequest) {
+    public Page<Recruit> getRecruitListForAdmin(GetRecruitListRequest getRecruitListRequest, Pageable pageable) {
         Specification<Recruit> spec = null;
 
         // 카테고리 미지정
         if(getRecruitListRequest.getCategoryId() == null) {
-            // 종료 여부 미지정
-            if(getRecruitListRequest.getIsEnded().equals("A")) {
-                spec = JpaSpecification.recruitTitleLike(getRecruitListRequest.getRecruitTitle())
-                        .and( JpaSpecification.examinationResultLike("%" + getRecruitListRequest.getExaminationResult() + "%") );
-           // 종료 여부 지정
-            } else {
-                spec = JpaSpecification.isEndedRecruit(getRecruitListRequest.getIsEnded())
-                        .and( JpaSpecification.recruitTitleLike(getRecruitListRequest.getRecruitTitle())
-                        .and( JpaSpecification.examinationResultLike("%" + getRecruitListRequest.getExaminationResult() + "%") ) );
-            }
+            spec = JpaSpecification.isEndedRecruit(getRecruitListRequest.getIsEnded())
+                    .and( JpaSpecification.recruitTitleLike(getRecruitListRequest.getRecruitTitle()))
+                    .and( JpaSpecification.examinationResultLike(getRecruitListRequest.getExaminationResult()) );
 
-        // 카테고리 지정
+            // 카테고리 지정
         } else {
-            // 종료 여부 미지정
-            if(getRecruitListRequest.getIsEnded().equals("A")) {
-                JpaSpecification.recruitCategoryLike(getRecruitListRequest.getCategoryId())
-                        .and( JpaSpecification.recruitTitleLike(getRecruitListRequest.getRecruitTitle())
-                        .and( JpaSpecification.examinationResultLike("%" + getRecruitListRequest.getExaminationResult() + "%") ) );
-            // 종료 여부 지정
-            } else {
-                spec = JpaSpecification.isEndedRecruit(getRecruitListRequest.getIsEnded())
-                        .and( JpaSpecification.recruitCategoryLike(getRecruitListRequest.getCategoryId())
-                        .and( JpaSpecification.recruitTitleLike(getRecruitListRequest.getRecruitTitle())
-                        .and( JpaSpecification.examinationResultLike("%" + getRecruitListRequest.getExaminationResult() + "%") ) ) );
-            }
+            spec = JpaSpecification.isEndedRecruit(getRecruitListRequest.getIsEnded())
+                    .and( JpaSpecification.recruitCategoryLike(getRecruitListRequest.getCategoryId())
+                            .and( JpaSpecification.recruitTitleLike(getRecruitListRequest.getRecruitTitle())
+                                    .and( JpaSpecification.examinationResultLike(getRecruitListRequest.getExaminationResult()) ) ) );
         }
+
         // 정렬 기준
         String orderBy = getRecruitListRequest.getOrderBy();
         Sort sort = null;
@@ -116,7 +105,7 @@ public class RecruitService {
         else if(orderBy.equals("hit")) sort = Sort.by( Sort.Order.desc("recruitHit"), Sort.Order.desc("recruitRegDate") );
         else if(orderBy.equals("date")) sort = Sort.by( Sort.Order.desc("recruitRegDate") );
 
-        return recruitRepository.findAll(spec, sort);
+        return recruitRepository.findAll(spec, pageable);
     }
 
     // 리크루트 생성 처리 -

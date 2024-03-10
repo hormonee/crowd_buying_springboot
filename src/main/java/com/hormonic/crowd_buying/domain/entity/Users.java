@@ -10,12 +10,12 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
-@Table
+@Table(name = "user")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
-public class User {
+public class Users {
     @Id
     @GeneratedValue(generator = "uuid2")
     @Column(columnDefinition = "BINARY(16)", nullable = false)
@@ -59,7 +59,7 @@ public class User {
     @Comment("사용자 등록 날짜")
     private LocalDateTime userRegDate;
 
-    public User(String userId, String userPw, String userName, String userBirth, String userContact, String userAddress, String userEmail, String userGender) {
+    public Users(String userId, String userPw, String userName, String userBirth, String userContact, String userAddress, String userEmail, String userGender) {
         this.userId = userId;
         this.userPw = userPw;
         this.userName = userName;
