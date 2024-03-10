@@ -12,7 +12,8 @@ public enum ErrorCode {
     S3_UPLOAD_FAIL(503, "EC003", "파일을 AWS S3에 업로드하는데 실패했습니다."),
     ALREADY_RECRUIT_MEMBER(400, "EC004", "이미 리크루트 멤버입니다."),
     NOT_RECRUIT_MEMBER(400, "EC005", "리크루트 멤버만 참여 취소가 가능합니다."),
-    NOT_ACCEPTED_RECRUIT(400, "EC006", "심사 통과된 리크루트가 아닙니다.");
+    NOT_ACCEPTED_RECRUIT(400, "EC006", "심사 통과된 리크루트가 아닙니다."),
+    NOT_VALIDATED_PARAM(400, "C007", "파라미터가 유효하지 않습니다.");
 
 
     private final int status;

@@ -1,6 +1,8 @@
 package com.hormonic.crowd_buying.repository;
 
 import com.hormonic.crowd_buying.domain.entity.recruit.Recruit;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -14,7 +16,8 @@ import java.util.UUID;
 
 @Repository
 public interface RecruitRepository extends JpaRepository<Recruit, UUID> {
-    List<Recruit> findAll(Specification<Recruit> spec, Sort sort);
+//    List<Recruit> findAll(Specification<Recruit> spec, Sort sort);
+    Page<Recruit> findAll(Specification<Recruit> spec, Pageable pageable);
 
     @Modifying(clearAutomatically = true, flushAutomatically = true)
     @Query("update Recruit r set r.examinationResult = :examinationResult, r.adminId = :adminId, r.recruitExaminedDate = now() " +

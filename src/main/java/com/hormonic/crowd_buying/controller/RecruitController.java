@@ -15,6 +15,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -33,14 +37,16 @@ public class RecruitController {
 
     @GetMapping
     @Operation(summary = "사용자용 리크루트 목록 조회", description = "카테고리 ID 검색명, 정렬 기준값들을 받아 종료되지 않고 심사 통과된 유효한 리크루트 목록 조회")
-    public ResponseEntity<List<Recruit>> getRecruitListForUser(@RequestBody GetRecruitListRequest getRecruitListRequest) {
-        return ResponseEntity.ok(recruitService.getRecruitListForUser(getRecruitListRequest));
+    public ResponseEntity<Page<Recruit>> getRecruitListForUser(@ModelAttribute GetRecruitListRequest getRecruitListRequest,
+                                                               @PageableDefault(size=1, sort="categoryId", direction = Sort.Direction.DESC) Pageable pageable) {
+        return ResponseEntity.ok(recruitService.getRecruitListForUser(getRecruitListRequest, pageable));
     }
 
     @GetMapping("/admin")
     @Operation(summary = "관리자용 리크루트 목록 조회", description = "모든 리크루트 목록을 조회 가능하며 필터 적용을 통해 원하는 종류의 리스트 추출 가능")
-    public ResponseEntity<List<Recruit>> getRecruitListForAdmin(@RequestBody GetRecruitListRequest getRecruitListRequest) {
-        return ResponseEntity.ok(recruitService.getRecruitListForAdmin(getRecruitListRequest));
+    public ResponseEntity<Page<Recruit>> getRecruitListForAdmin(@ModelAttribute GetRecruitListRequest getRecruitListRequest,
+                                                                @PageableDefault(size=2, sort="recruitHit", direction = Sort.Direction.DESC) Pageable pageable) {
+        return ResponseEntity.ok(recruitService.getRecruitListForAdmin(getRecruitListRequest, pageable));
     }
 
     @GetMapping("/{uuid}")

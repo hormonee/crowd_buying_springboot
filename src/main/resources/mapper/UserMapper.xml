@@ -5,11 +5,11 @@
 
 <mapper namespace="com.hormonic.crowd_buying.service.user.UserMapper">
 
-    <select id="getUserList" resultType="com.hormonic.crowd_buying.domain.entity.User">
+    <select id="getUserList" resultType="com.hormonic.crowd_buying.domain.entity.Users">
         select * from user order by created_date desc
     </select>
 
-    <select id="getUserByName" resultType="User">
+    <select id="getUserByName" resultType="Users">
         select user_uuid, user_name, user_email, created_date
             from user where user_name = #{user_name}
     </select>
