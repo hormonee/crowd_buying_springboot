@@ -41,4 +41,5 @@ public class RecruitValidator {
             throw new NotAcceptedRecruitException(ErrorCode.NOT_ACCEPTED_RECRUIT);
         }
     }
+
 }

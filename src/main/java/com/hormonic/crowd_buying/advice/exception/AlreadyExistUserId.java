@@ -4,10 +4,10 @@ import com.hormonic.crowd_buying.advice.payload.ErrorCode;
 import lombok.Getter;
 
 @Getter
-public class NotEnoughAllotmentException extends RuntimeException {
+public class AlreadyExistUserId extends RuntimeException {
     private final ErrorCode errorCode;
 
-    public NotEnoughAllotmentException(ErrorCode errorCode) {
+    public AlreadyExistUserId(ErrorCode errorCode) {
         super(errorCode.getMessage());
         this.errorCode = errorCode;
     }
