@@ -77,9 +77,9 @@ public class ControllerAdvice {
         return new ResponseEntity<>(errorResponse, errorCode.toHttpStatus());
     }
 
-    @ExceptionHandler(AlreadyExistUserId.class)
-    public ResponseEntity<ErrorResponse> handleAlreadyExistUserId() {
-        ErrorCode errorCode = ErrorCode.ALREADY_EXIST_USERID;
+    @ExceptionHandler(AlreadyExistUserIdException.class)
+    public ResponseEntity<ErrorResponse> handleAlreadyExistUserId(AlreadyExistUserIdException e) {
+        ErrorCode errorCode = e.getErrorCode();
         ErrorResponse errorResponse = errorCode.toErrorResponse();
 
         return new ResponseEntity<>(errorResponse, errorCode.toHttpStatus());

@@ -53,7 +53,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests((auth) -> auth
                         .requestMatchers("/", "/api-spec", "/swagger-ui/**", "/v3/api-docs/**", "/api/category/**").permitAll()
                         .requestMatchers("/api/users/login", "/api/users/join").anonymous()
-                        .requestMatchers("/api/admin/**").hasRole("ADMIN")  // 실패 시, 403 상태 코드 반환
+                        .requestMatchers("/api/admin/**").hasRole("ADMIN")  // 실패 시, 403 Forbidden 상태 코드 반환
                         .anyRequest().authenticated());
 
         // JWTFilter 등록
@@ -61,10 +61,6 @@ public class SecurityConfig {
                 .addFilterBefore(new JWTFilter(jwtUtil), LoginFilter.class);
 
         // LoginFilter 등록
-        /* 이렇게 설정해주면 디폴트 /login 경로가 변경될 것 같지만 안되고, JWTFilter 생성자에서 설정해줘야한다.
-        LoginFilter loginFilter = new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil);
-        loginFilter.setFilterProcessesUrl("/api/users/login");
-        */
         http
                 .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil),
                              UsernamePasswordAuthenticationFilter.class);

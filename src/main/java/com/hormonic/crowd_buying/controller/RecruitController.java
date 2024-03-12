@@ -45,7 +45,7 @@ public class RecruitController {
     @GetMapping("/admin")
     @Operation(summary = "관리자용 리크루트 목록 조회", description = "모든 리크루트 목록을 조회 가능하며 필터 적용을 통해 원하는 종류의 리스트 추출 가능")
     public ResponseEntity<Page<Recruit>> getRecruitListForAdmin(@ModelAttribute GetRecruitListRequest getRecruitListRequest,
-                                                                @PageableDefault(size=2, sort="recruitHit", direction = Sort.Direction.DESC) Pageable pageable) {
+                                                                @PageableDefault(size=2, sort="recruitRegDate", direction = Sort.Direction.DESC) Pageable pageable) {
         return ResponseEntity.ok(recruitService.getRecruitListForAdmin(getRecruitListRequest, pageable));
     }
 

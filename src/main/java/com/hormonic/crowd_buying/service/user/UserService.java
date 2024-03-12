@@ -1,6 +1,5 @@
 package com.hormonic.crowd_buying.service.user;
 
-import com.hormonic.crowd_buying.advice.exception.AlreadyExistUserId;
 import com.hormonic.crowd_buying.domain.dto.request.user.CreateUserRequest;
 import com.hormonic.crowd_buying.domain.dto.request.user.UpdateUserRequest;
 import com.hormonic.crowd_buying.domain.dto.response.user.CreateAndDeleteUserResponse;

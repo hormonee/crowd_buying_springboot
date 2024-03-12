@@ -58,10 +58,11 @@ public class UserController {
         return new ResponseEntity<>(userService.createUser(createUserRequest), HttpStatus.CREATED);
     }
 
-//    @PostMapping("/login")
-//    public ResponseEntity<User> login(@ModelAttribute UserLoginRequest loginRequest) {
-//        return ResponseEntity.ok().build();
-//    }
+    /* Spring Security & JWT로 대체(경로는 같음)
+    @PostMapping("/login")
+    public ResponseEntity<User> login(@ModelAttribute UserLoginRequest userLoginRequest) {
+        return ResponseEntity.ok().build();
+    }*/
 
     @PutMapping
     @Operation(summary = "회원 정보 수정", description = "회원 정보 수정 처리")

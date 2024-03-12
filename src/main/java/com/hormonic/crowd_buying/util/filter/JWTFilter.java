@@ -11,6 +11,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -47,24 +48,29 @@ public class JWTFilter extends OncePerRequestFilter {
             return;
         }
 
-        //토큰에서 userId와 /* role 획득 */
+        // 토큰에서 userId와 /* role 획득 */
         String userId = jwtUtil.getUserId(token);
 //        String role = jwtUtil.getRole(token);
 
-        //userEntity를 생성하여 값 set
+        // User Entity를 생성하여 값 set
         User user = User.builder()
                         .userId(userId)
                         .userPw("tempPassword")  // 아무 값이나 넣어둬도 됨
                         .build();
 //        user.setRole(role);
 
-        //UserDetails에 회원 정보 객체 담기
+        // UserDetails에 회원 정보 객체 담기
         CustomUserDetails customUserDetails = new CustomUserDetails(user);
 
-        //스프링 시큐리티 인증 토큰 생성
+        // 스프링 시큐리티 인증 토큰 생성
         Authentication authToken = new UsernamePasswordAuthenticationToken(customUserDetails, null, customUserDetails.getAuthorities());
-        //세션에 사용자 등록
+        // 세션에 사용자 등록
+        /* 멀티 스레드일 때 문제를 야기할 수 있으므로 SecurityContext 객체를 생성하여 사용
         SecurityContextHolder.getContext().setAuthentication(authToken);
+        */
+        SecurityContext context = SecurityContextHolder.createEmptyContext();
+        context.setAuthentication(authToken);
+        SecurityContextHolder.setContext(context);
 
         filterChain.doFilter(req, res);
     }
