@@ -3,8 +3,10 @@ package com.hormonic.crowd_buying.controller;
 import com.hormonic.crowd_buying.domain.dto.request.user.CreateUserRequest;
 import com.hormonic.crowd_buying.domain.dto.request.user.DeleteUserRequest;
 import com.hormonic.crowd_buying.domain.dto.request.user.UpdateUserRequest;
+import com.hormonic.crowd_buying.domain.dto.request.user.UserLoginRequest;
 import com.hormonic.crowd_buying.domain.dto.response.user.CreateAndDeleteUserResponse;
-import com.hormonic.crowd_buying.domain.entity.Users;
+import com.hormonic.crowd_buying.domain.entity.User;
+import com.hormonic.crowd_buying.repository.UserRepository;
 import com.hormonic.crowd_buying.service.user.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -25,20 +27,22 @@ import java.util.List;
 public class UserController {
     private final UserService userService;
 
+    private final UserRepository userRepository;
+
     @GetMapping
     @Operation(summary = "사용자 목록 조회", description = "관리자용 전체 사용자 목록 조회")
-    public ResponseEntity<List<Users>> getUserList() {
+    public ResponseEntity<List<User>> getUserList() {
         // session accessType attribute 를 통해 관리자인지 검증 필요
         return ResponseEntity.ok(userService.getUserList());
     }
 
     @GetMapping("/{id}")
     @Operation(summary = "특정 사용자 정보 조회", description = "사용자 ID를 통해 특정 한 명의 사용자 정보 조회")
-    public ResponseEntity<Users> getUserByUserId(@PathVariable("id") String userId) {
+    public ResponseEntity<User> getUserByUserId(@PathVariable("id") String userId) {
         return ResponseEntity.ok(userService.getUserByUserId(userId));
     }
 
-    @PostMapping
+    @PostMapping("/join")
     @Operation(summary = "사용자 회원가입", description = "사용자 세부 정보를 입력 받아 회원가입 처리")
     @Parameters(value = {
             @Parameter(name = "userId", description = "아이디", required = true),
@@ -50,9 +54,15 @@ public class UserController {
             @Parameter(name = "userEmail", description = "이메일", required = true),
             @Parameter(name = "userGender", description = "성별", required = true)
     })
-    public ResponseEntity<CreateAndDeleteUserResponse> createUser(@RequestBody @Valid CreateUserRequest createUserRequest) {
-        return new ResponseEntity(userService.createUser(createUserRequest), HttpStatus.CREATED);
+    public ResponseEntity<CreateAndDeleteUserResponse> createUser(@RequestBody CreateUserRequest createUserRequest) {
+        return new ResponseEntity<>(userService.createUser(createUserRequest), HttpStatus.CREATED);
     }
+
+    /* Spring Security & JWT로 대체(경로는 같음)
+    @PostMapping("/login")
+    public ResponseEntity<User> login(@ModelAttribute UserLoginRequest userLoginRequest) {
+        return ResponseEntity.ok().build();
+    }*/
 
     @PutMapping
     @Operation(summary = "회원 정보 수정", description = "회원 정보 수정 처리")
@@ -63,7 +73,7 @@ public class UserController {
             @Parameter(name = "userAddress", description = "주소", required = true),
             @Parameter(name = "userEmail", description = "이메일", required = true)
     })
-    public ResponseEntity<Users> updateUser(@RequestBody @Valid UpdateUserRequest updateUserRequest) {
+    public ResponseEntity<User> updateUser(@RequestBody @Valid UpdateUserRequest updateUserRequest) {
         userService.updateUser(updateUserRequest);
         return ResponseEntity.ok().build();
     }

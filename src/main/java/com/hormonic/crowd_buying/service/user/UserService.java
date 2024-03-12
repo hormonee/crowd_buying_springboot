@@ -4,11 +4,12 @@ import com.hormonic.crowd_buying.domain.dto.request.user.CreateUserRequest;
 import com.hormonic.crowd_buying.domain.dto.request.user.UpdateUserRequest;
 import com.hormonic.crowd_buying.domain.dto.response.user.CreateAndDeleteUserResponse;
 import com.hormonic.crowd_buying.domain.entity.Notification;
-import com.hormonic.crowd_buying.domain.entity.Users;
+import com.hormonic.crowd_buying.domain.entity.User;
 import com.hormonic.crowd_buying.repository.NotificationRepository;
 import com.hormonic.crowd_buying.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,37 +18,45 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final NotificationRepository notificationRepository;
+    private final UserValidator userValidator;
 
-    public Users getUserByUserId(String userId) {
+
+    public User getUserByUserId(String userId) {
         return userRepository.findByUserId(userId);
     }
 
-    public List<Users> getUserList() {
+    public List<User> getUserList() {
         return userRepository.findAll();
     }
 
     // 회원 가입
     @Transactional
     public CreateAndDeleteUserResponse createUser(CreateUserRequest createUserRequest) {
-        Users newUsers = new Users(
+        // 회원 가입 시, 기입한 아이디가 이미 존재하는지 확인 - 존재한다면 409 상태 코드 반환
+        userValidator.validateIsUserIdExist(userRepository.existsByUserId(createUserRequest.getUserId()));
+
+        User newUser = new User(
                 createUserRequest.getUserId(),
-                createUserRequest.getUserPw(),
+                bCryptPasswordEncoder.encode(createUserRequest.getUserPw()),
                 createUserRequest.getUserName(),
                 createUserRequest.getUserBirth(),
                 createUserRequest.getUserContact(),
                 createUserRequest.getUserAddress(),
                 createUserRequest.getUserEmail(),
                 createUserRequest.getUserGender());
-        CreateAndDeleteUserResponse createAndDeleteUserResponse = userRepository.save(newUsers).toCreateAndDeleteUserResponse();
+
+        CreateAndDeleteUserResponse createAndDeleteUserResponse = userRepository.save(newUser).toCreateAndDeleteUserResponse();
 
         notificationRepository.save( Notification.builder()
-                                                .userId(createAndDeleteUserResponse.getUserId())
-                                                .notificationTitle("회원가입을 환영합니다!")
-                                                .notificationContent(createAndDeleteUserResponse.getUserName()
-                                                        + "(" + createAndDeleteUserResponse.getUserId() + ")"
-                                                        + "님 성공적으로 회원가입이 완료되셨습니다.")
-                                                .build());
+                .userId(createAndDeleteUserResponse.getUserId())
+                .notificationTitle("회원가입을 환영합니다!")
+                .notificationContent(createAndDeleteUserResponse.getUserName()
+                        + "(" + createAndDeleteUserResponse.getUserId() + ")"
+                        + "님 성공적으로 회원가입이 완료되셨습니다.")
+                .build());
+
         return createAndDeleteUserResponse;
     }
 
@@ -69,10 +78,10 @@ public class UserService {
 
     // 회원 탈퇴
     public CreateAndDeleteUserResponse deleteUser(String userId) {
-        Users willDeletedUsers = userRepository.findByUserId(userId);
-        userRepository.deleteById(willDeletedUsers.getUserUuid());
+        User willDeletedUser = userRepository.findByUserId(userId);
+        userRepository.deleteById(willDeletedUser.getUserUuid());
 
-        return willDeletedUsers.toCreateAndDeleteUserResponse();
+        return willDeletedUser.toCreateAndDeleteUserResponse();
     }
 
 }

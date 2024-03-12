@@ -10,18 +10,19 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
-@Table(name = "user")
+@Table
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
-public class Users {
+public class User {
     @Id
     @GeneratedValue(generator = "uuid2")
     @Column(columnDefinition = "BINARY(16)", nullable = false)
     @Comment("사용자 UUID")
     private UUID userUuid;
 
+//    @Column(name = "user_id", nullable = false)
     @Column(nullable = false)
     @Comment("사용자 ID")
     private String userId;
@@ -46,7 +47,7 @@ public class Users {
     @Comment("사용자 주소")
     private String userAddress;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     @Comment("사용자 이메일")
     private String userEmail;
 
@@ -59,7 +60,7 @@ public class Users {
     @Comment("사용자 등록 날짜")
     private LocalDateTime userRegDate;
 
-    public Users(String userId, String userPw, String userName, String userBirth, String userContact, String userAddress, String userEmail, String userGender) {
+    public User(String userId, String userPw, String userName, String userBirth, String userContact, String userAddress, String userEmail, String userGender) {
         this.userId = userId;
         this.userPw = userPw;
         this.userName = userName;
@@ -72,8 +73,9 @@ public class Users {
 
     public CreateAndDeleteUserResponse toCreateAndDeleteUserResponse() {
         return CreateAndDeleteUserResponse.builder()
-                .userName(this.getUserName())
-                .userId(this.getUserId())
+                .userName(this.userName)
+                .userId(this.userId)
                 .build();
     }
+
 }
