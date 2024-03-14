@@ -24,8 +24,10 @@
 # 개발 환경 및 개발 도구
 #Front End
 - Dart, Flutter, Thymeleaf, jQuery, HTML5, CSS3, JavaScript
+  
 #Back End
 - Java, SpringBoot, MySQL, JPA, MyBatis, AWS S3, Spring Security(+JWT) (프론트와 어드민 페이지 완성 후 어플리케이션 배포 시, AWS RDS, EC2 활용 예정)
+
 #개발 도구
 - IntelliJ IDEA(Ultimate), Android Studio, Visual Studio Code
 
@@ -33,19 +35,24 @@
 #User Domain
 - 회원가입&로그인(Spring Security, JWT)
 - 사용자 목록, 사용자 세부 정보 조회, 사용자 정보 수정, 회원 탈퇴
+
 #Recruit Domain
+
 리크루트(합동 구매 모집) Life Cycle : 등록 신청 → 관리자 심사 → 등록(반려) → 모집 마감(철회)
 - 등록 신청
 - 관리자 심사(통과 또는 반려 처리)
 - 목록 및 세부 정보 조회, 관리자용 리크루트 조회(사용자는 심사 통과된 것만 조회 가능)
 - 참여 및 참여 취소(참여 인원이 0명이 되면 리크루트 철회 처리)
 - 리크루트 강제 종료
+
 #Bookmark Domain
 - 북마크 조회 : 사용자별 북마크 조회
 - 북마크 추가 및 삭제
+
 #Notification Domain
 - 알림 조회 : 사용자별 알림 목록 조회
 - 알림 보내기(생성) : 회원 가입, 리크루트 등록 신청 및 심사 결과, 북마크한 리크루트 마감 임박(모집 완료 까지 2명 이하로 남았을 경우), 리크루트 참여 및 참여 취소, 리크루트 마감 등의 경우에 알림 자동 발송
+
 #Category Domain
 - 카테고리 목록 및 세부 정보 조회
 - 선택된 카테고리의 하위 카테고리 목록 조회
